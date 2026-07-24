@@ -1,0 +1,210 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-3xl: calc(var(--radius) + 20px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
+
+  --color-lavender: var(--pastel-lavender);
+  --color-mist: var(--pastel-mist);
+  --color-mint: var(--pastel-mint);
+  --color-peach: var(--pastel-peach);
+  --color-butter: var(--pastel-butter);
+
+  --font-sans:
+    "Manrope", ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+    sans-serif;
+  --font-display:
+    "Manrope", ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui,
+    sans-serif;
+}
+
+:root {
+  --radius: 1rem;
+
+  /* Warm cream canvas */
+  --background: oklch(0.986 0.006 85);
+  --foreground: oklch(0.22 0.015 260);
+  --surface: oklch(1 0 0);
+  --surface-muted: oklch(0.965 0.008 80);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.015 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.015 260);
+
+  /* Mist-blue brand */
+  --brand: oklch(0.66 0.1 245);
+  --brand-foreground: oklch(0.99 0.003 240);
+  --brand-soft: oklch(0.93 0.04 245);
+
+  --primary: oklch(0.3 0.02 260);
+  --primary-foreground: oklch(0.99 0.003 240);
+  --secondary: oklch(0.955 0.008 80);
+  --secondary-foreground: oklch(0.26 0.015 260);
+  --muted: oklch(0.955 0.008 80);
+  --muted-foreground: oklch(0.52 0.02 260);
+  --accent: oklch(0.93 0.04 245);
+  --accent-foreground: oklch(0.32 0.08 245);
+  --destructive: oklch(0.62 0.19 25);
+  --destructive-foreground: oklch(0.99 0.003 240);
+  --border: oklch(0.92 0.008 80);
+  --input: oklch(0.93 0.008 80);
+  --ring: oklch(0.72 0.09 245);
+
+  /* Pastel accents */
+  --pastel-lavender: oklch(0.9 0.055 300);
+  --pastel-mist: oklch(0.92 0.04 235);
+  --pastel-mint: oklch(0.91 0.06 165);
+  --pastel-peach: oklch(0.91 0.055 45);
+  --pastel-butter: oklch(0.95 0.08 95);
+}
+
+.dark {
+  --background: oklch(0.18 0.012 260);
+  --foreground: oklch(0.95 0.005 80);
+  --surface: oklch(0.22 0.012 260);
+  --surface-muted: oklch(0.24 0.014 260);
+
+  --card: oklch(0.22 0.012 260);
+  --card-foreground: oklch(0.95 0.005 80);
+  --popover: oklch(0.22 0.012 260);
+  --popover-foreground: oklch(0.95 0.005 80);
+
+  --brand: oklch(0.78 0.1 240);
+  --brand-foreground: oklch(0.18 0.02 260);
+  --brand-soft: oklch(0.32 0.05 245);
+
+  --primary: oklch(0.95 0.005 80);
+  --primary-foreground: oklch(0.2 0.015 260);
+  --secondary: oklch(0.27 0.012 260);
+  --secondary-foreground: oklch(0.95 0.005 80);
+  --muted: oklch(0.27 0.012 260);
+  --muted-foreground: oklch(0.72 0.015 260);
+  --accent: oklch(0.32 0.05 245);
+  --accent-foreground: oklch(0.9 0.05 245);
+  --destructive: oklch(0.65 0.19 25);
+  --destructive-foreground: oklch(0.99 0.003 240);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.78 0.1 240);
+
+  --pastel-lavender: oklch(0.42 0.06 300);
+  --pastel-mist: oklch(0.42 0.05 235);
+  --pastel-mint: oklch(0.42 0.06 165);
+  --pastel-peach: oklch(0.42 0.06 45);
+  --pastel-butter: oklch(0.45 0.08 95);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "cv11";
+  }
+  body {
+    min-height: 100dvh;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.022em;
+    font-family: var(--font-display);
+  }
+  button,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Safe area utilities for iOS/Android PWA */
+@utility pt-safe {
+  padding-top: max(env(safe-area-inset-top), 0px);
+}
+@utility pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+@utility pb-nav {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+}
+@utility mb-safe {
+  margin-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+
+/* Soft warm gradient used on hero/greeting */
+@utility bg-hero-warm {
+  background-image:
+    radial-gradient(120% 80% at 0% 0%, oklch(0.94 0.055 300 / 0.55), transparent 55%),
+    radial-gradient(120% 80% at 100% 0%, oklch(0.93 0.05 45 / 0.5), transparent 55%),
+    linear-gradient(180deg, oklch(0.97 0.02 240 / 0.6), transparent);
+}
+@utility bg-hero-cool {
+  background-image:
+    radial-gradient(120% 80% at 100% 0%, oklch(0.9 0.055 300 / 0.6), transparent 55%),
+    radial-gradient(120% 80% at 0% 0%, oklch(0.91 0.05 165 / 0.55), transparent 55%);
+}
+
+/* Subtle inner rings for premium card feel */
+@utility ring-soft {
+  box-shadow:
+    0 1px 0 0 oklch(1 0 0 / 0.6) inset,
+    0 1px 2px 0 oklch(0.2 0.01 260 / 0.04),
+    0 8px 24px -12px oklch(0.2 0.01 260 / 0.1);
+}
+
+/* Screen container for portrait phone layouts */
+@utility screen {
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# No `publish` directory is pinned here: Nitro auto-detects the Netlify build
+# environment and produces Netlify's expected output layout (Netlify Functions
+# for SSR/server functions + static assets) without extra configuration.
+# If Netlify's build log reports it can't find the publish directory, check
+# https://nitro.build/deploy/providers/netlify for the exact path for the
+# Nitro version pinned in package.json and set `publish` explicitly here.

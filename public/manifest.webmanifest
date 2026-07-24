@@ -1,0 +1,13 @@
+{
+  "name": "Quotient — Beautiful quotations",
+  "short_name": "Quotient",
+  "description": "Turn one quotation into a reusable template and create new client quotes in minutes.",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F5EF",
+  "theme_color": "#F8F5EF",
+  "categories": ["business", "productivity"],
+  "icons": [{ "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }]
+}

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /quotations
+Disallow: /templates
+Disallow: /clients
+Disallow: /rate-card
+Disallow: /settings
+Disallow: /auth
