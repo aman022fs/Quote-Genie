@@ -2,11 +2,19 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { ChevronLeft, Plus, Trash2, Pencil } from "lucide-react";
 import { StatusBadge } from "@/components/StatusBadge";
+import {
+  FIELD_TYPES,
+  FIELD_CATEGORIES,
+  fieldTypeGlyph,
+  fieldTypeLabel,
+  type TemplateFixedContent,
+} from "@/lib/template-types";
 
 export const Route = createFileRoute("/_authenticated/templates/$id")({
   head: () => ({
@@ -28,18 +36,41 @@ interface TplField {
   sort_order: number;
 }
 
-const TYPES = [
-  "short_text",
-  "long_text",
-  "number",
-  "currency",
-  "percentage",
-  "date",
-  "dropdown",
-  "boolean",
-  "line_items",
+const TYPES = FIELD_TYPES;
+const CATEGORIES = FIELD_CATEGORIES;
+
+const FIXED_CONTENT_FIELDS: Array<{
+  key: keyof TemplateFixedContent;
+  label: string;
+  placeholder: string;
+}> = [
+  {
+    key: "company_intro",
+    label: "Company introduction",
+    placeholder: "A short line about your business.",
+  },
+  {
+    key: "terms",
+    label: "Terms and conditions",
+    placeholder: "Standard terms shown on every quotation.",
+  },
+  {
+    key: "payment_terms",
+    label: "Payment terms",
+    placeholder: "e.g. 50% advance, balance on delivery.",
+  },
+  {
+    key: "bank_details",
+    label: "Bank details",
+    placeholder: "Account name, number, IFSC/SWIFT, etc.",
+  },
+  {
+    key: "notes",
+    label: "Default notes",
+    placeholder: "Boilerplate notes to prefill on new quotations.",
+  },
+  { key: "footer", label: "Footer", placeholder: "A closing line shown at the bottom." },
 ];
-const CATEGORIES = ["variable", "fixed", "calculated", "optional"];
 
 function TemplateDetail() {
   const { id } = Route.useParams();
@@ -65,14 +96,25 @@ function TemplateDetail() {
     },
   });
   const [name, setName] = useState("");
+  const [fixedContent, setFixedContent] = useState<TemplateFixedContent>({});
   const [editField, setEditField] = useState<TplField | null>(null);
+  const [savingContent, setSavingContent] = useState(false);
   useEffect(() => {
-    if (template) setName(template.name);
+    if (template) {
+      setName(template.name);
+      setFixedContent((template.fixed_content as TemplateFixedContent | null) ?? {});
+    }
   }, [template]);
 
   async function saveName() {
-    if (!template || name === template.name) return;
-    await supabase.from("templates").update({ name }).eq("id", id);
+    if (!template) return;
+    setSavingContent(true);
+    const { error } = await supabase
+      .from("templates")
+      .update({ name, fixed_content: fixedContent as never })
+      .eq("id", id);
+    setSavingContent(false);
+    if (error) return toast.error(`Couldn't save: ${error.message}`);
     toast.success("Saved");
     refetchTemplate();
   }
@@ -100,12 +142,14 @@ function TemplateDetail() {
   }
 
   async function deleteField(fid: string) {
-    await supabase.from("template_fields").delete().eq("id", fid);
+    const { error } = await supabase.from("template_fields").delete().eq("id", fid);
+    if (error) return toast.error(error.message);
     refetch();
   }
 
   async function updateField(f: TplField) {
-    await supabase
+    if (!f.label.trim()) return toast.error("Give this field a label first.");
+    const { error } = await supabase
       .from("template_fields")
       .update({
         label: f.label,
@@ -114,12 +158,14 @@ function TemplateDetail() {
         required: f.required,
       })
       .eq("id", f.id);
+    if (error) return toast.error(error.message);
     setEditField(null);
     refetch();
   }
 
   async function archive() {
-    await supabase.from("templates").update({ status: "archived" }).eq("id", id);
+    const { error } = await supabase.from("templates").update({ status: "archived" }).eq("id", id);
+    if (error) return toast.error(error.message);
     toast.success("Template archived");
     navigate({ to: "/templates" });
   }
@@ -137,9 +183,10 @@ function TemplateDetail() {
           </button>
           <button
             onClick={saveName}
-            className="rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background"
+            disabled={savingContent}
+            className="rounded-full bg-foreground px-4 py-2 text-[13px] font-medium text-background disabled:opacity-50"
           >
-            Save
+            {savingContent ? "Saving…" : "Save"}
           </button>
         </div>
         <div className="px-6 pb-8 pt-4">
@@ -185,12 +232,12 @@ function TemplateDetail() {
                 className="flex w-full items-center gap-3 rounded-2xl bg-card p-4 text-left ring-1 ring-border active:scale-[0.99]"
               >
                 <div className="grid size-9 place-items-center rounded-xl bg-secondary text-[11px] text-muted-foreground">
-                  {typeGlyph(f.field_type)}
+                  {fieldTypeGlyph(f.field_type)}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-[14px] font-semibold">{f.label}</div>
                   <div className="truncate text-[11px] text-muted-foreground">
-                    {f.category} · {f.field_type.replace("_", " ")}
+                    {f.category} · {fieldTypeLabel(f.field_type)}
                     {f.required ? " · required" : ""}
                   </div>
                 </div>
@@ -199,6 +246,40 @@ function TemplateDetail() {
             ))}
           </div>
         </section>
+
+        <section>
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Fixed content
+          </div>
+          <div className="space-y-3 rounded-3xl bg-card p-4 ring-1 ring-border">
+            {FIXED_CONTENT_FIELDS.map((f) => (
+              <div key={f.key}>
+                <label className="text-[12px] font-medium text-muted-foreground">{f.label}</label>
+                <Textarea
+                  rows={2}
+                  placeholder={f.placeholder}
+                  value={fixedContent[f.key] ?? ""}
+                  onChange={(e) => setFixedContent({ ...fixedContent, [f.key]: e.target.value })}
+                  className="mt-1 rounded-xl bg-secondary/60 p-3 text-[14px]"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {template?.source_file_path && (
+          <section>
+            <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Reference file
+            </div>
+            <div className="flex items-center justify-between rounded-2xl bg-card p-4 ring-1 ring-border">
+              <div className="min-w-0 truncate text-[13px] text-foreground/80">
+                {template.source_file_name ?? "Uploaded file"}
+              </div>
+              <ViewReferenceLink path={template.source_file_path} />
+            </div>
+          </section>
+        )}
 
         <button
           onClick={archive}
@@ -271,7 +352,7 @@ function FieldEditor({
                       : "bg-card text-foreground/70 ring-1 ring-border",
                   ].join(" ")}
                 >
-                  {t.replace("_", " ")}
+                  {fieldTypeLabel(t)}
                 </button>
               ))}
             </div>
@@ -328,17 +409,29 @@ function FieldEditor({
   );
 }
 
-function typeGlyph(t: string) {
-  const map: Record<string, string> = {
-    short_text: "Aa",
-    long_text: "¶",
-    number: "#",
-    currency: "$",
-    percentage: "%",
-    date: "📅",
-    dropdown: "≡",
-    boolean: "☑",
-    line_items: "≣",
-  };
-  return map[t] ?? "•";
+function ViewReferenceLink({ path }: { path: string }) {
+  const [loading, setLoading] = useState(false);
+
+  async function open() {
+    setLoading(true);
+    const { data, error } = await supabase.storage
+      .from("quotation-uploads")
+      .createSignedUrl(path, 60 * 5);
+    setLoading(false);
+    if (error || !data?.signedUrl) {
+      toast.error("Couldn't open the reference file.");
+      return;
+    }
+    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+  }
+
+  return (
+    <button
+      onClick={open}
+      disabled={loading}
+      className="shrink-0 rounded-full bg-secondary px-3 py-1.5 text-[12px] font-medium disabled:opacity-50"
+    >
+      {loading ? "Opening…" : "View"}
+    </button>
+  );
 }

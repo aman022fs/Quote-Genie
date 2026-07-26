@@ -6,6 +6,7 @@ import { getMyTemplates, getMyBusiness, nextQuotationNumber } from "@/lib/querie
 import { QuestionScreen } from "@/components/QuestionScreen";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
+import type { TemplateFixedContent } from "@/lib/template-types";
 
 export const Route = createFileRoute("/_authenticated/quotations/new")({
   head: () => ({
@@ -36,6 +37,8 @@ function NewQuotation() {
       const number = await nextQuotationNumber(business);
       const expiry = new Date();
       expiry.setDate(expiry.getDate() + 30);
+      const template = active.find((t) => t.id === tplId);
+      const defaultNotes = (template?.fixed_content as TemplateFixedContent | null)?.notes ?? null;
       const { data, error } = await supabase
         .from("quotations")
         .insert({
@@ -48,6 +51,7 @@ function NewQuotation() {
           expiry_date: expiry.toISOString().slice(0, 10),
           answers: {},
           items: [],
+          notes: defaultNotes,
         })
         .select()
         .single();

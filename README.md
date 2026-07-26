@@ -1,6 +1,6 @@
 # Quotient
 
-Turn one quotation you already send into a reusable template, then create new client quotes in minutes.
+Choose a starting template for your business, customize it once, then create new client quotes in minutes.
 
 ## Stack
 
@@ -8,7 +8,6 @@ Turn one quotation you already send into a reusable template, then create new cl
 - TypeScript
 - Tailwind CSS v4
 - [Supabase](https://supabase.com) (Postgres, Auth, Storage)
-- [Google Gemini](https://ai.google.dev) for quotation analysis
 - Nitro (server build, deployable to Netlify, Vercel, or a plain Node server)
 
 ## Local development
@@ -18,7 +17,7 @@ npm install
 npm run dev
 ```
 
-Copy `.env.example` to `.env` and fill in your Supabase and Google Gemini credentials before running the app — see [Environment variables](#environment-variables).
+Copy `.env.example` to `.env` and fill in your Supabase credentials before running the app — see [Environment variables](#environment-variables).
 
 ## Environment variables
 
@@ -27,8 +26,6 @@ See `.env.example` for the full list. In short:
 - `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` — public Supabase project URL and publishable key (browser-safe).
 - `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` — same values, read server-side during SSR.
 - `SUPABASE_SERVICE_ROLE_KEY` — server-only, bypasses Row Level Security. Never exposed to the client.
-- `GOOGLE_GENERATIVE_AI_API_KEY` — server-only key used for AI quotation analysis.
-- `GOOGLE_GENERATIVE_AI_MODEL` — optional override for the Gemini model used (defaults to `gemini-3.6-flash`).
 
 ## Database
 
