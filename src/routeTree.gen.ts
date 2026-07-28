@@ -19,7 +19,7 @@ import { Route as AuthenticatedQuotationsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedRateCardRouteImport } from './routes/_authenticated/rate-card'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedTemplatesRouteImport } from './routes/_authenticated/templates'
-import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as AuthCallbackRouteImport } from './routes/auth_.callback'
 import { Route as AuthenticatedQuotationsIdRouteImport } from './routes/_authenticated/quotations.$id'
 import { Route as AuthenticatedQuotationsNewRouteImport } from './routes/_authenticated/quotations.new'
 import { Route as AuthenticatedTemplatesIdRouteImport } from './routes/_authenticated/templates.$id'
@@ -74,9 +74,9 @@ const AuthenticatedTemplatesRoute = AuthenticatedTemplatesRouteImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/callback',
-  path: '/callback',
-  getParentRoute: () => AuthRoute,
+  id: '/auth_/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedQuotationsIdRoute =
   AuthenticatedQuotationsIdRouteImport.update({
@@ -99,7 +99,7 @@ const AuthenticatedTemplatesIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -114,7 +114,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -131,7 +131,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRouteWithChildren
+  '/auth': typeof AuthRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -139,7 +139,7 @@ export interface FileRoutesById {
   '/_authenticated/rate-card': typeof AuthenticatedRateCardRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/templates': typeof AuthenticatedTemplatesRouteWithChildren
-  '/auth/callback': typeof AuthCallbackRoute
+  '/auth_/callback': typeof AuthCallbackRoute
   '/_authenticated/quotations/$id': typeof AuthenticatedQuotationsIdRoute
   '/_authenticated/quotations/new': typeof AuthenticatedQuotationsNewRoute
   '/_authenticated/templates/$id': typeof AuthenticatedTemplatesIdRoute
@@ -187,7 +187,7 @@ export interface FileRouteTypes {
     | '/_authenticated/rate-card'
     | '/_authenticated/settings'
     | '/_authenticated/templates'
-    | '/auth/callback'
+    | '/auth_/callback'
     | '/_authenticated/quotations/$id'
     | '/_authenticated/quotations/new'
     | '/_authenticated/templates/$id'
@@ -196,7 +196,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -271,12 +272,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTemplatesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/callback'
+    '/auth_/callback': {
+      id: '/auth_/callback'
+      path: '/auth/callback'
       fullPath: '/auth/callback'
       preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof AuthRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/quotations/$id': {
       id: '/_authenticated/quotations/$id'
@@ -355,20 +356,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface AuthRouteChildren {
-  AuthCallbackRoute: typeof AuthCallbackRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthCallbackRoute: AuthCallbackRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRouteWithChildren,
+  AuthRoute: AuthRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
