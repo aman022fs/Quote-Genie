@@ -53,6 +53,12 @@ function createSupabaseClient() {
       storage: typeof window !== "undefined" ? localStorage : undefined,
       persistSession: true,
       autoRefreshToken: true,
+      // OAuth/email-confirm codes are exchanged explicitly by
+      // /auth/callback (see routes/auth.callback.tsx). Auto-detection is
+      // off so the client never races that manual exchange for the same
+      // (single-use) code.
+      detectSessionInUrl: false,
+      flowType: "pkce",
     },
   });
 }

@@ -42,7 +42,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
             data: { full_name: name },
           },
         });
@@ -64,13 +64,13 @@ function AuthPage() {
   async function signInGoogle() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/dashboard` },
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) {
       toast.error(error.message || "Google sign-in failed");
     }
     // On success Supabase navigates the browser to Google's consent screen
-    // itself, so there's nothing further to do here.
+    // itself; /auth/callback exchanges the returned code for a session.
   }
 
   return (
