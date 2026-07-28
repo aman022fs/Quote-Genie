@@ -24,7 +24,7 @@ import {
   X,
 } from "lucide-react";
 
-export const Route = createFileRoute("/_authenticated/quotations/$id")({
+export const Route = createFileRoute("/_authenticated/quotations_/$id")({
   head: () => ({
     meta: [
       { title: "Quotation — Quotient" },

@@ -20,8 +20,8 @@ import { Route as AuthenticatedRateCardRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedTemplatesRouteImport } from './routes/_authenticated/templates'
 import { Route as AuthCallbackRouteImport } from './routes/auth_.callback'
-import { Route as AuthenticatedQuotationsIdRouteImport } from './routes/_authenticated/quotations.$id'
-import { Route as AuthenticatedQuotationsNewRouteImport } from './routes/_authenticated/quotations.new'
+import { Route as AuthenticatedQuotationsIdRouteImport } from './routes/_authenticated/quotations_.$id'
+import { Route as AuthenticatedQuotationsNewRouteImport } from './routes/_authenticated/quotations_.new'
 import { Route as AuthenticatedTemplatesIdRouteImport } from './routes/_authenticated/templates.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -80,15 +80,15 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
 } as any)
 const AuthenticatedQuotationsIdRoute =
   AuthenticatedQuotationsIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedQuotationsRoute,
+    id: '/quotations_/$id',
+    path: '/quotations/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedQuotationsNewRoute =
   AuthenticatedQuotationsNewRouteImport.update({
-    id: '/new',
-    path: '/new',
-    getParentRoute: () => AuthenticatedQuotationsRoute,
+    id: '/quotations_/new',
+    path: '/quotations/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedTemplatesIdRoute =
   AuthenticatedTemplatesIdRouteImport.update({
@@ -103,7 +103,7 @@ export interface FileRoutesByFullPath {
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
-  '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
+  '/quotations': typeof AuthenticatedQuotationsRoute
   '/rate-card': typeof AuthenticatedRateCardRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/templates': typeof AuthenticatedTemplatesRouteWithChildren
@@ -118,7 +118,7 @@ export interface FileRoutesByTo {
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
-  '/quotations': typeof AuthenticatedQuotationsRouteWithChildren
+  '/quotations': typeof AuthenticatedQuotationsRoute
   '/rate-card': typeof AuthenticatedRateCardRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/templates': typeof AuthenticatedTemplatesRouteWithChildren
@@ -135,13 +135,13 @@ export interface FileRoutesById {
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
-  '/_authenticated/quotations': typeof AuthenticatedQuotationsRouteWithChildren
+  '/_authenticated/quotations': typeof AuthenticatedQuotationsRoute
   '/_authenticated/rate-card': typeof AuthenticatedRateCardRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/templates': typeof AuthenticatedTemplatesRouteWithChildren
   '/auth_/callback': typeof AuthCallbackRoute
-  '/_authenticated/quotations/$id': typeof AuthenticatedQuotationsIdRoute
-  '/_authenticated/quotations/new': typeof AuthenticatedQuotationsNewRoute
+  '/_authenticated/quotations_/$id': typeof AuthenticatedQuotationsIdRoute
+  '/_authenticated/quotations_/new': typeof AuthenticatedQuotationsNewRoute
   '/_authenticated/templates/$id': typeof AuthenticatedTemplatesIdRoute
 }
 export interface FileRouteTypes {
@@ -188,8 +188,8 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/templates'
     | '/auth_/callback'
-    | '/_authenticated/quotations/$id'
-    | '/_authenticated/quotations/new'
+    | '/_authenticated/quotations_/$id'
+    | '/_authenticated/quotations_/new'
     | '/_authenticated/templates/$id'
   fileRoutesById: FileRoutesById
 }
@@ -279,19 +279,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/quotations/$id': {
-      id: '/_authenticated/quotations/$id'
-      path: '/$id'
+    '/_authenticated/quotations_/$id': {
+      id: '/_authenticated/quotations_/$id'
+      path: '/quotations/$id'
       fullPath: '/quotations/$id'
       preLoaderRoute: typeof AuthenticatedQuotationsIdRouteImport
-      parentRoute: typeof AuthenticatedQuotationsRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/quotations/new': {
-      id: '/_authenticated/quotations/new'
-      path: '/new'
+    '/_authenticated/quotations_/new': {
+      id: '/_authenticated/quotations_/new'
+      path: '/quotations/new'
       fullPath: '/quotations/new'
       preLoaderRoute: typeof AuthenticatedQuotationsNewRouteImport
-      parentRoute: typeof AuthenticatedQuotationsRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/templates/$id': {
       id: '/_authenticated/templates/$id'
@@ -302,22 +302,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface AuthenticatedQuotationsRouteChildren {
-  AuthenticatedQuotationsIdRoute: typeof AuthenticatedQuotationsIdRoute
-  AuthenticatedQuotationsNewRoute: typeof AuthenticatedQuotationsNewRoute
-}
-
-const AuthenticatedQuotationsRouteChildren: AuthenticatedQuotationsRouteChildren =
-  {
-    AuthenticatedQuotationsIdRoute: AuthenticatedQuotationsIdRoute,
-    AuthenticatedQuotationsNewRoute: AuthenticatedQuotationsNewRoute,
-  }
-
-const AuthenticatedQuotationsRouteWithChildren =
-  AuthenticatedQuotationsRoute._addFileChildren(
-    AuthenticatedQuotationsRouteChildren,
-  )
 
 interface AuthenticatedTemplatesRouteChildren {
   AuthenticatedTemplatesIdRoute: typeof AuthenticatedTemplatesIdRoute
@@ -337,20 +321,24 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
-  AuthenticatedQuotationsRoute: typeof AuthenticatedQuotationsRouteWithChildren
+  AuthenticatedQuotationsRoute: typeof AuthenticatedQuotationsRoute
   AuthenticatedRateCardRoute: typeof AuthenticatedRateCardRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTemplatesRoute: typeof AuthenticatedTemplatesRouteWithChildren
+  AuthenticatedQuotationsIdRoute: typeof AuthenticatedQuotationsIdRoute
+  AuthenticatedQuotationsNewRoute: typeof AuthenticatedQuotationsNewRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
-  AuthenticatedQuotationsRoute: AuthenticatedQuotationsRouteWithChildren,
+  AuthenticatedQuotationsRoute: AuthenticatedQuotationsRoute,
   AuthenticatedRateCardRoute: AuthenticatedRateCardRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTemplatesRoute: AuthenticatedTemplatesRouteWithChildren,
+  AuthenticatedQuotationsIdRoute: AuthenticatedQuotationsIdRoute,
+  AuthenticatedQuotationsNewRoute: AuthenticatedQuotationsNewRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

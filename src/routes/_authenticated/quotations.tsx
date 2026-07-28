@@ -63,8 +63,14 @@ function QuotationsList() {
             </div>
             <div className="mt-3 font-medium">Nothing here yet</div>
             <div className="mt-1 text-[13px] text-muted-foreground">
-              Tap the + below to create your first quotation.
+              Create your first quotation to see it here.
             </div>
+            <Link
+              to="/quotations/new"
+              className="mt-5 inline-flex items-center justify-center rounded-2xl bg-foreground px-5 py-3 text-[14px] font-semibold text-background active:scale-[0.99]"
+            >
+              Create quotation
+            </Link>
           </div>
         ) : (
           filtered.map((q) => {

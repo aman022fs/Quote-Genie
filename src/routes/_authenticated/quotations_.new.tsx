@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import type { TemplateFixedContent } from "@/lib/template-types";
 
-export const Route = createFileRoute("/_authenticated/quotations/new")({
+export const Route = createFileRoute("/_authenticated/quotations_/new")({
   head: () => ({
     meta: [
       { title: "New quotation — Quotient" },
